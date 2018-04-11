@@ -2,8 +2,8 @@
 # CMake helper for the majority of the cpp-ethereum modules.
 #
 # This module defines
-#     Monero_XXX_LIBRARIES, the libraries needed to use ethereum.
-#     Monero_FOUND, If false, do not try to use ethereum.
+#     Incognito_XXX_LIBRARIES, the libraries needed to use ethereum.
+#     Incognito_FOUND, If false, do not try to use ethereum.
 #
 # File addetped from cpp-ethereum
 #
@@ -50,7 +50,7 @@ foreach (l ${LIBS})
 
 	set(Inc_${L}_LIBRARIES ${Inc_${L}_LIBRARY})
 
-	message(STATUS FindMonero " Inc_${L}_LIBRARIES ${Inc_${L}_LIBRARY}")
+	message(STATUS FindIncognito " Inc_${L}_LIBRARIES ${Inc_${L}_LIBRARY}")
 
 	add_library(${l} STATIC IMPORTED)
 	set_property(TARGET ${l} PROPERTY IMPORTED_LOCATION ${Inc_${L}_LIBRARIES})

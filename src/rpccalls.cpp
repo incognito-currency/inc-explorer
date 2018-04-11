@@ -57,7 +57,7 @@ rpccalls::get_current_height()
 
     if (!r)
     {
-        cerr << "Error connecting to Monero deamon at "
+        cerr << "Error connecting to Incognito deamon at "
              << deamon_url << endl;
         return 0;
     }
@@ -90,7 +90,7 @@ rpccalls::get_mempool(vector<tx_info>& mempool_txs)
 
     if (!r || res.status != CORE_RPC_STATUS_OK)
     {
-        cerr << "Error connecting to Monero deamon at "
+        cerr << "Error connecting to Incognito deamon at "
              << deamon_url << endl;
         return false;
     }
@@ -189,14 +189,14 @@ rpccalls::get_network_info(COMMAND_RPC_GET_INFO::response& response)
 
         if (!err.empty())
         {
-            cerr << "Error connecting to Monero deamon due to "
+            cerr << "Error connecting to Incognito deamon due to "
                  << err << endl;
             return false;
         }
     }
     else
     {
-        cerr << "Error connecting to Monero deamon at "
+        cerr << "Error connecting to Incognito deamon at "
              << deamon_url << endl;
         return false;
     }
@@ -256,14 +256,14 @@ rpccalls::get_dynamic_per_kb_fee_estimate(
 
         if (!err.empty())
         {
-            cerr << "Error connecting to Monero deamon due to "
+            cerr << "Error connecting to Incognito deamon due to "
                  << err << endl;
             return false;
         }
     }
     else
     {
-        cerr << "Error connecting to Monero deamon at "
+        cerr << "Error connecting to Incognito deamon at "
              << deamon_url << endl;
         return false;
     }
@@ -319,14 +319,14 @@ rpccalls::get_block(string const& blk_hash, block& blk, string& error_msg)
 
         if (!err.empty())
         {
-            cerr << "Error connecting to Monero deamon due to "
+            cerr << "Error connecting to Incognito deamon due to "
                  << err << endl;
             return false;
         }
     }
     else
     {
-        cerr << "get_block: error connecting to Monero deamon at "
+        cerr << "get_block: error connecting to Incognito deamon at "
              << deamon_url << endl;
         return false;
     }

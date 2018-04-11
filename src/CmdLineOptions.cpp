@@ -18,7 +18,7 @@ namespace inceg
         p.add("txhash", -1);
 
         options_description desc(
-                "incblocks, Onion Monero Blockchain Explorer");
+                "incblocks, Onion Incognito Blockchain Explorer");
 
         desc.add_options()
                 ("help,h", value<bool>()->default_value(false)->implicit_value(true),
@@ -44,7 +44,7 @@ namespace inceg
                 ("enable-autorefresh-option", value<bool>()->default_value(false)->implicit_value(true),
                  "enable users to have the index page on autorefresh")
                 ("enable-emission-monitor", value<bool>()->default_value(false)->implicit_value(true),
-                 "enable Monero total emission monitoring thread")
+                 "enable Incognito total emission monitoring thread")
                 ("port,p", value<string>()->default_value("9002"),
                  "default explorer port")
                 ("testnet-url", value<string>()->default_value(""),
@@ -64,7 +64,7 @@ namespace inceg
                 ("ssl-key-file", value<string>(),
                  "path to key file for ssl (https) functionality")
                 ("deamon-url,d", value<string>()->default_value("http:://127.0.0.1:39002"),
-                 "Monero deamon url");
+                 "Incognito deamon url");
 
 
         store(command_line_parser(acc, avv)

@@ -1438,7 +1438,7 @@ namespace inceg
 
             if (inc_address_str.empty())
             {
-                return string("Monero address not provided!");
+                return string("Incognito address not provided!");
             }
 
             if (viewkey_str.empty())
@@ -4626,7 +4626,7 @@ namespace inceg
             if (address_str.empty())
             {
                 j_response["status"]  = "error";
-                j_response["message"] = "Monero address not provided";
+                j_response["message"] = "Incognito address not provided";
                 return j_response;
             }
 
@@ -4851,7 +4851,7 @@ namespace inceg
             if (address_str.empty())
             {
                 j_response["status"]  = "error";
-                j_response["message"] = "Monero address not provided";
+                j_response["message"] = "Incognito address not provided";
                 return j_response;
             }
 

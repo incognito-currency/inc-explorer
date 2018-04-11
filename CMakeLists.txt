@@ -26,11 +26,11 @@ endif()
 message(STATUS INCOGNITO_DIR ": ${INCOGNITO_DIR}")
 
 set(INCOGNITO_SOURCE_DIR ${INCOGNITO_DIR}
-        CACHE PATH "Path to the root directory for Monero")
+        CACHE PATH "Path to the root directory for Incognito")
 
 # set location of incognito build tree
 set(INCOGNITO_BUILD_DIR ${INCOGNITO_SOURCE_DIR}/build/release/
-        CACHE PATH "Path to the build directory for Monero")
+        CACHE PATH "Path to the build directory for Incognito")
 
 set(MY_CMAKE_DIR "${CMAKE_CURRENT_LIST_DIR}/cmake"
         CACHE PATH "The path to the cmake directory of the current project")
@@ -38,11 +38,11 @@ set(MY_CMAKE_DIR "${CMAKE_CURRENT_LIST_DIR}/cmake"
 list(APPEND CMAKE_MODULE_PATH "${MY_CMAKE_DIR}")
 
 set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "${INCOGNITO_BUILD_DIR}"
-        CACHE PATH "Add Monero directory for library searching")
+        CACHE PATH "Add Incognito directory for library searching")
 
 include(MyUtils)
 
-find_package(Monero)
+find_package(Incognito)
 
 # find boost
 find_package(Boost COMPONENTS
