@@ -2,8 +2,8 @@
 // Created by mwo on 28/05/17.
 //
 
-#ifndef XMRBLOCKS_MEMPOOLSTATUS_H
-#define XMRBLOCKS_MEMPOOLSTATUS_H
+#ifndef INCBLOCKS_MEMPOOLSTATUS_H
+#define INCBLOCKS_MEMPOOLSTATUS_H
 
 
 #include "MicroCore.h"
@@ -16,7 +16,7 @@
 #include <mutex>
 #include <atomic>
 
-namespace xmreg
+namespace inceg
 {
 
 struct MempoolStatus
@@ -38,8 +38,8 @@ struct MempoolStatus
         uint64_t mixin_no {0};
 
         string fee_str;
-        string xmr_inputs_str;
-        string xmr_outputs_str;
+        string inc_inputs_str;
+        string inc_outputs_str;
         string timestamp_str;
         string txsize;
 
@@ -156,4 +156,4 @@ struct MempoolStatus
 };
 
 }
-#endif //XMRBLOCKS_MEMPOOLSTATUS_H
+#endif //INCBLOCKS_MEMPOOLSTATUS_H

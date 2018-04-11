@@ -32,7 +32,7 @@ set(LIBS common;blocks;cryptonote_basic;cryptonote_core;
 		cryptonote_protocol;daemonizer;mnemonics;epee;lmdb;
 		blockchain_db;ringct;wallet;cncrypto;easylogging;version;checkpoints)
 
-set(Xmr_INCLUDE_DIRS "${CPP_MONERO_DIR}")
+set(Inc_INCLUDE_DIRS "${CPP_INCOGNITO_DIR}")
 
 # if the project is a subset of main cpp-ethereum project
 # use same pattern for variables as Boost uses
@@ -41,35 +41,35 @@ foreach (l ${LIBS})
 
 	string(TOUPPER ${l} L)
 
-	find_library(Xmr_${L}_LIBRARY
+	find_library(Inc_${L}_LIBRARY
 		NAMES ${l}
 		PATHS ${CMAKE_LIBRARY_PATH}
 		PATH_SUFFIXES "/src/${l}" "/src/" "/external/db_drivers/lib${l}" "/lib" "/src/crypto" "/contrib/epee/src" "/external/easylogging++/"
 		NO_DEFAULT_PATH
 	)
 
-	set(Xmr_${L}_LIBRARIES ${Xmr_${L}_LIBRARY})
+	set(Inc_${L}_LIBRARIES ${Inc_${L}_LIBRARY})
 
-	message(STATUS FindMonero " Xmr_${L}_LIBRARIES ${Xmr_${L}_LIBRARY}")
+	message(STATUS FindMonero " Inc_${L}_LIBRARIES ${Inc_${L}_LIBRARY}")
 
 	add_library(${l} STATIC IMPORTED)
-	set_property(TARGET ${l} PROPERTY IMPORTED_LOCATION ${Xmr_${L}_LIBRARIES})
+	set_property(TARGET ${l} PROPERTY IMPORTED_LOCATION ${Inc_${L}_LIBRARIES})
 
 endforeach()
 
-#if (EXISTS ${MONERO_BUILD_DIR}/external/easylogging++/libeasylogging.a)
+#if (EXISTS ${INCOGNITO_BUILD_DIR}/external/easylogging++/libeasylogging.a)
 #	add_library(easylogging STATIC IMPORTED)
 #	set_property(TARGET easylogging
-#			PROPERTY IMPORTED_LOCATION ${MONERO_BUILD_DIR}/external/easylogging++/libeasylogging.a)
+#			PROPERTY IMPORTED_LOCATION ${INCOGNITO_BUILD_DIR}/external/easylogging++/libeasylogging.a)
 #endif()
 
-message(STATUS ${MONERO_SOURCE_DIR}/build)
+message(STATUS ${INCOGNITO_SOURCE_DIR}/build)
 
-# include monero headers
+# include incognito headers
 include_directories(
-		${MONERO_SOURCE_DIR}/src
-		${MONERO_SOURCE_DIR}/external
-		${MONERO_SOURCE_DIR}/build
-		${MONERO_SOURCE_DIR}/external/easylogging++
-		${MONERO_SOURCE_DIR}/contrib/epee/include
-		${MONERO_SOURCE_DIR}/external/db_drivers/liblmdb)
+		${INCOGNITO_SOURCE_DIR}/src
+		${INCOGNITO_SOURCE_DIR}/external
+		${INCOGNITO_SOURCE_DIR}/build
+		${INCOGNITO_SOURCE_DIR}/external/easylogging++
+		${INCOGNITO_SOURCE_DIR}/contrib/epee/include
+		${INCOGNITO_SOURCE_DIR}/external/db_drivers/liblmdb)

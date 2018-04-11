@@ -2,15 +2,15 @@
 // Created by mwo on 5/11/15.
 //
 
-#ifndef XMREG01_MICROCORE_H
-#define XMREG01_MICROCORE_H
+#ifndef INCEG01_MICROCORE_H
+#define INCEG01_MICROCORE_H
 
 #include <iostream>
 
-#include "monero_headers.h"
+#include "incognito_headers.h"
 #include "tools.h"
 
-namespace xmreg
+namespace inceg
 {
     using namespace cryptonote;
     using namespace crypto;
@@ -84,4 +84,4 @@ namespace xmreg
 
 
 
-#endif //XMREG01_MICROCORE_H
+#endif //INCEG01_MICROCORE_H

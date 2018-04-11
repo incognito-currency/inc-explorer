@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(myxrm)
+project(myirm)
 
 set(SOURCE_HEADERS
         MicroCore.h
 		tools.h
-		monero_headers.h
+		incognito_headers.h
 		CurrentBlockchainStatus.h)
 
 set(SOURCE_FILES
@@ -16,9 +16,9 @@ set(SOURCE_FILES
 		rpccalls.cpp rpccalls.h
 		version.h.in CurrentBlockchainStatus.cpp MempoolStatus.cpp MempoolStatus.h)
 
-# make static library called libmyxrm
+# make static library called libmyirm
 # that we are going to link to
 # in the root CMakeLists.txt file
-add_library(myxrm
+add_library(myirm
 		STATIC
 		${SOURCE_FILES})

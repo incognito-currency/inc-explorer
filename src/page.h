@@ -2,14 +2,14 @@
 // Created by mwo on 8/04/16.
 //
 
-#ifndef CROWXMR_PAGE_H
-#define CROWXMR_PAGE_H
+#ifndef CROWINC_PAGE_H
+#define CROWINC_PAGE_H
 
 
 
 #include "mstch/mstch.hpp"
 
-#include "monero_headers.h"
+#include "incognito_headers.h"
 
 #include "../gen/version.h"
 
@@ -104,7 +104,7 @@ namespace std
 }
 
 
-namespace xmreg
+namespace inceg
 {
 
 
@@ -127,8 +127,8 @@ namespace xmreg
         crypto::hash prefix_hash;
         crypto::public_key pk;
         std::vector<crypto::public_key> additional_pks;
-        uint64_t xmr_inputs;
-        uint64_t xmr_outputs;
+        uint64_t inc_inputs;
+        uint64_t inc_outputs;
         uint64_t num_nonrct_inputs;
         uint64_t fee;
         uint64_t mixin_no;
@@ -152,7 +152,7 @@ namespace xmreg
         // key images of inputs
         vector<txin_to_key> input_key_imgs;
 
-        // public keys and xmr amount of outputs
+        // public keys and inc amount of outputs
         vector<pair<txout_to_key, uint64_t>> output_pub_keys;
 
         mstch::map
@@ -163,13 +163,13 @@ namespace xmreg
             string fee_str {"N/A"};
             string fee_short_str {"N/A"};
 
-            const double& xmr_amount = XMR_AMOUNT(fee);
+            const double& inc_amount = INC_AMOUNT(fee);
 
             if (!input_key_imgs.empty())
             {
                 mixin_str     = std::to_string(mixin_no);
-                fee_str       = fmt::format("{:0.6f}", xmr_amount);
-                fee_short_str = fmt::format("{:0.3f}", xmr_amount);
+                fee_str       = fmt::format("{:0.6f}", inc_amount);
+                fee_short_str = fmt::format("{:0.3f}", inc_amount);
             }
 
             const double& tx_size =  static_cast<double>(size)/1024.0;
@@ -180,10 +180,10 @@ namespace xmreg
                     {"pub_key"           , pod_to_hex(pk)},
                     {"tx_fee"            , fee_str},
                     {"tx_fee_short"      , fee_short_str},
-                    {"sum_inputs"        , xmr_amount_to_str(xmr_inputs , "{:0.6f}")},
-                    {"sum_outputs"       , xmr_amount_to_str(xmr_outputs, "{:0.6f}")},
-                    {"sum_inputs_short"  , xmr_amount_to_str(xmr_inputs , "{:0.3f}")},
-                    {"sum_outputs_short" , xmr_amount_to_str(xmr_outputs, "{:0.3f}")},
+                    {"sum_inputs"        , inc_amount_to_str(inc_inputs , "{:0.6f}")},
+                    {"sum_outputs"       , inc_amount_to_str(inc_outputs, "{:0.6f}")},
+                    {"sum_inputs_short"  , inc_amount_to_str(inc_inputs , "{:0.3f}")},
+                    {"sum_outputs_short" , inc_amount_to_str(inc_outputs, "{:0.3f}")},
                     {"no_inputs"         , static_cast<uint64_t>(input_key_imgs.size())},
                     {"no_outputs"        , static_cast<uint64_t>(output_pub_keys.size())},
                     {"no_nonrct_inputs"  , num_nonrct_inputs},
@@ -351,29 +351,29 @@ namespace xmreg
             // read template files for all the pages
             // into template_file map
 
-            template_file["css_styles"]      = xmreg::read(TMPL_CSS_STYLES);
-            template_file["header"]          = xmreg::read(TMPL_HEADER);
+            template_file["css_styles"]      = inceg::read(TMPL_CSS_STYLES);
+            template_file["header"]          = inceg::read(TMPL_HEADER);
             template_file["footer"]          = get_footer();
-            template_file["index2"]          = get_full_page(xmreg::read(TMPL_INDEX2));
-            template_file["mempool"]         = xmreg::read(TMPL_MEMPOOL);
-            template_file["altblocks"]       = get_full_page(xmreg::read(TMPL_ALTBLOCKS));
-            template_file["mempool_error"]   = xmreg::read(TMPL_MEMPOOL_ERROR);
+            template_file["index2"]          = get_full_page(inceg::read(TMPL_INDEX2));
+            template_file["mempool"]         = inceg::read(TMPL_MEMPOOL);
+            template_file["altblocks"]       = get_full_page(inceg::read(TMPL_ALTBLOCKS));
+            template_file["mempool_error"]   = inceg::read(TMPL_MEMPOOL_ERROR);
             template_file["mempool_full"]    = get_full_page(template_file["mempool"]);
-            template_file["block"]           = get_full_page(xmreg::read(TMPL_BLOCK));
-            template_file["tx"]              = get_full_page(xmreg::read(TMPL_TX));
-            template_file["my_outputs"]      = get_full_page(xmreg::read(TMPL_MY_OUTPUTS));
-            template_file["rawtx"]           = get_full_page(xmreg::read(TMPL_MY_RAWTX));
-            template_file["checkrawtx"]      = get_full_page(xmreg::read(TMPL_MY_CHECKRAWTX));
-            template_file["pushrawtx"]       = get_full_page(xmreg::read(TMPL_MY_PUSHRAWTX));
-            template_file["rawkeyimgs"]      = get_full_page(xmreg::read(TMPL_MY_RAWKEYIMGS));
-            template_file["rawoutputkeys"]   = get_full_page(xmreg::read(TMPL_MY_RAWOUTPUTKEYS));
-            template_file["checkrawkeyimgs"] = get_full_page(xmreg::read(TMPL_MY_CHECKRAWKEYIMGS));
-            template_file["checkoutputkeys"] = get_full_page(xmreg::read(TMPL_MY_CHECKRAWOUTPUTKEYS));
-            template_file["address"]         = get_full_page(xmreg::read(TMPL_ADDRESS));
-            template_file["search_results"]  = get_full_page(xmreg::read(TMPL_SEARCH_RESULTS));
-            template_file["tx_details"]      = xmreg::read(string(TMPL_PARIALS_DIR) + "/tx_details.html");
-            template_file["tx_table_header"] = xmreg::read(string(TMPL_PARIALS_DIR) + "/tx_table_header.html");
-            template_file["tx_table_row"]    = xmreg::read(string(TMPL_PARIALS_DIR) + "/tx_table_row.html");
+            template_file["block"]           = get_full_page(inceg::read(TMPL_BLOCK));
+            template_file["tx"]              = get_full_page(inceg::read(TMPL_TX));
+            template_file["my_outputs"]      = get_full_page(inceg::read(TMPL_MY_OUTPUTS));
+            template_file["rawtx"]           = get_full_page(inceg::read(TMPL_MY_RAWTX));
+            template_file["checkrawtx"]      = get_full_page(inceg::read(TMPL_MY_CHECKRAWTX));
+            template_file["pushrawtx"]       = get_full_page(inceg::read(TMPL_MY_PUSHRAWTX));
+            template_file["rawkeyimgs"]      = get_full_page(inceg::read(TMPL_MY_RAWKEYIMGS));
+            template_file["rawoutputkeys"]   = get_full_page(inceg::read(TMPL_MY_RAWOUTPUTKEYS));
+            template_file["checkrawkeyimgs"] = get_full_page(inceg::read(TMPL_MY_CHECKRAWKEYIMGS));
+            template_file["checkoutputkeys"] = get_full_page(inceg::read(TMPL_MY_CHECKRAWOUTPUTKEYS));
+            template_file["address"]         = get_full_page(inceg::read(TMPL_ADDRESS));
+            template_file["search_results"]  = get_full_page(inceg::read(TMPL_SEARCH_RESULTS));
+            template_file["tx_details"]      = inceg::read(string(TMPL_PARIALS_DIR) + "/tx_details.html");
+            template_file["tx_table_header"] = inceg::read(string(TMPL_PARIALS_DIR) + "/tx_table_header.html");
+            template_file["tx_table_row"]    = inceg::read(string(TMPL_PARIALS_DIR) + "/tx_table_row.html");
         }
 
         /**
@@ -394,7 +394,7 @@ namespace xmreg
             {
                 json j_info;
 
-                get_monero_network_info(j_info);
+                get_incognito_network_info(j_info);
 
                 return j_info;
             });
@@ -425,7 +425,7 @@ namespace xmreg
                     {"mainnet_url"              , mainnet_url},
                     {"refresh"                  , refresh_page},
                     {"height"                   , height},
-                    {"server_timestamp"         , xmreg::timestamp_to_str_gm(local_copy_server_timestamp)},
+                    {"server_timestamp"         , inceg::timestamp_to_str_gm(local_copy_server_timestamp)},
                     {"age_format"               , string("[h:m:d]")},
                     {"page_no"                  , page_no},
                     {"total_page_no"            , (height / no_of_last_blocks)},
@@ -688,7 +688,7 @@ namespace xmreg
             } // while (i <= end_height)
 
             // calculate median size of the blocks shown
-            double blk_size_median = xmreg::calc_median(blk_sizes.begin(), blk_sizes.end());
+            double blk_size_median = inceg::calc_median(blk_sizes.begin(), blk_sizes.end());
 
             context["blk_size_median"] = fmt::format("{:0.2f}", blk_size_median);
 
@@ -773,8 +773,8 @@ namespace xmreg
                         = CurrentBlockchainStatus::get_emission();
 
                 string emission_blk_no   = std::to_string(current_values.blk_no - 1);
-                string emission_coinbase = xmr_amount_to_str(current_values.coinbase, "{:0.3f}");
-                string emission_fee      = xmr_amount_to_str(current_values.fee, "{:0.3f}");
+                string emission_coinbase = inc_amount_to_str(current_values.coinbase, "{:0.3f}");
+                string emission_fee      = inc_amount_to_str(current_values.fee, "{:0.3f}");
 
                 context["emission"] = mstch::map {
                         {"blk_no"    , emission_blk_no},
@@ -886,8 +886,8 @@ namespace xmreg
                         {"age"             , age_str},
                         {"hash"            , pod_to_hex(mempool_tx.tx_hash)},
                         {"fee"             , mempool_tx.fee_str},
-                        {"xmr_inputs"      , mempool_tx.xmr_inputs_str},
-                        {"xmr_outputs"     , mempool_tx.xmr_outputs_str},
+                        {"inc_inputs"      , mempool_tx.inc_inputs_str},
+                        {"inc_outputs"     , mempool_tx.inc_outputs_str},
                         {"no_inputs"       , mempool_tx.no_inputs},
                         {"no_outputs"      , mempool_tx.no_outputs},
                         {"pID"             , string {mempool_tx.pID}},
@@ -1036,7 +1036,7 @@ namespace xmreg
             string blk_hash_str  = pod_to_hex(blk_hash);
 
             // get block timestamp in user friendly format
-            string blk_timestamp = xmreg::timestamp_to_str_gm(blk.timestamp);
+            string blk_timestamp = inceg::timestamp_to_str_gm(blk.timestamp);
 
             // get age of the block relative to the server time
             pair<string, string> age = get_age(server_timestamp, blk.timestamp);
@@ -1136,7 +1136,7 @@ namespace xmreg
 
 
                 // get mixins in time scale for visual representation
-                //string mixin_times_scale = xmreg::timestamps_time_scale(mixin_timestamps,
+                //string mixin_times_scale = inceg::timestamps_time_scale(mixin_timestamps,
                 //                                                        server_timestamp);
 
 
@@ -1147,11 +1147,11 @@ namespace xmreg
 
             // add total fees in the block to the context
             context["sum_fees"]
-                    = xmreg::xmr_amount_to_str(sum_fees, "{:0.6f}", "0");
+                    = inceg::inc_amount_to_str(sum_fees, "{:0.6f}", "0");
 
-            // get xmr in the block reward
+            // get inc in the block reward
             context["blk_reward"]
-                    = xmreg::xmr_amount_to_str(txd_coinbase.xmr_outputs - sum_fees, "{:0.6f}");
+                    = inceg::inc_amount_to_str(txd_coinbase.inc_outputs - sum_fees, "{:0.6f}");
 
             add_css_style(context);
 
@@ -1165,7 +1165,7 @@ namespace xmreg
         {
             crypto::hash blk_hash;
 
-            if (!xmreg::parse_str_secret_key(_blk_hash, blk_hash))
+            if (!inceg::parse_str_secret_key(_blk_hash, blk_hash))
             {
                 cerr << "Cant parse blk hash: " << blk_hash << endl;
                 return fmt::format("Cant get block {:s} due to block hash parse error!", blk_hash);
@@ -1193,7 +1193,7 @@ namespace xmreg
             // parse tx hash string to hash object
             crypto::hash tx_hash;
 
-            if (!xmreg::parse_str_secret_key(tx_hash_str, tx_hash))
+            if (!inceg::parse_str_secret_key(tx_hash_str, tx_hash))
             {
                 cerr << "Cant parse tx hash: " << tx_hash_str << endl;
                 return string("Cant get tx hash due to parse error: " + tx_hash_str);
@@ -1229,7 +1229,7 @@ namespace xmreg
                     uint64_t tx_recieve_timestamp
                             = found_txs.at(0).receive_time;
 
-                    blk_timestamp = xmreg::timestamp_to_str_gm(tx_recieve_timestamp);
+                    blk_timestamp = inceg::timestamp_to_str_gm(tx_recieve_timestamp);
 
                     age = get_age(server_timestamp, tx_recieve_timestamp,
                                   FULL_AGE_FORMAT);
@@ -1418,7 +1418,7 @@ namespace xmreg
 
         string
         show_my_outputs(string tx_hash_str,
-                        string xmr_address_str,
+                        string inc_address_str,
                         string viewkey_str, /* or tx_prv_key_str when tx_prove == true */
                         string raw_tx_data,
                         string domain,
@@ -1427,7 +1427,7 @@ namespace xmreg
 
             // remove white characters
             boost::trim(tx_hash_str);
-            boost::trim(xmr_address_str);
+            boost::trim(inc_address_str);
             boost::trim(viewkey_str);
             boost::trim(raw_tx_data);
 
@@ -1436,7 +1436,7 @@ namespace xmreg
                 return string("tx hash not provided!");
             }
 
-            if (xmr_address_str.empty())
+            if (inc_address_str.empty())
             {
                 return string("Monero address not provided!");
             }
@@ -1452,19 +1452,19 @@ namespace xmreg
             // parse tx hash string to hash object
             crypto::hash tx_hash;
 
-            if (!xmreg::parse_str_secret_key(tx_hash_str, tx_hash))
+            if (!inceg::parse_str_secret_key(tx_hash_str, tx_hash))
             {
                 cerr << "Cant parse tx hash: " << tx_hash_str << endl;
                 return string("Cant get tx hash due to parse error: " + tx_hash_str);
             }
 
-            // parse string representing given monero address
+            // parse string representing given incognito address
             cryptonote::address_parse_info address_info;
 
-            if (!xmreg::parse_str_address(xmr_address_str,  address_info, testnet))
+            if (!inceg::parse_str_address(inc_address_str,  address_info, testnet))
             {
-                cerr << "Cant parse string address: " << xmr_address_str << endl;
-                return string("Cant parse xmr address: " + xmr_address_str);
+                cerr << "Cant parse string address: " << inc_address_str << endl;
+                return string("Cant parse inc address: " + inc_address_str);
             }
 
             // parse string representing given private key
@@ -1472,7 +1472,7 @@ namespace xmreg
 
             std::vector<crypto::secret_key> multiple_tx_secret_keys;
 
-            if (!xmreg::parse_str_secret_key(viewkey_str, multiple_tx_secret_keys))
+            if (!inceg::parse_str_secret_key(viewkey_str, multiple_tx_secret_keys))
             {
                 cerr << "Cant parse the private key: " << viewkey_str << endl;
                 return string("Cant parse private key: " + viewkey_str);
@@ -1495,7 +1495,7 @@ namespace xmreg
 //        string spend_key_str("643fedcb8dca1f3b406b84575ecfa94ba01257d56f20d55e8535385503dacc08");
 //
 //        crypto::secret_key prv_spend_key;
-//        if (!xmreg::parse_str_secret_key(spend_key_str, prv_spend_key))
+//        if (!inceg::parse_str_secret_key(spend_key_str, prv_spend_key))
 //        {
 //            cerr << "Cant parse the prv_spend_key : " << spend_key_str << endl;
 //            return string("Cant parse prv_spend_key : " + spend_key_str);
@@ -1562,7 +1562,7 @@ namespace xmreg
                     uint64_t tx_recieve_timestamp
                             = found_txs.at(0).receive_time;
 
-                    blk_timestamp = xmreg::timestamp_to_str_gm(tx_recieve_timestamp);
+                    blk_timestamp = inceg::timestamp_to_str_gm(tx_recieve_timestamp);
 
                     age = get_age(server_timestamp,
                                   tx_recieve_timestamp,
@@ -1607,7 +1607,7 @@ namespace xmreg
                 // calculate difference between tx and server timestamps
                 age = get_age(server_timestamp, blk.timestamp, FULL_AGE_FORMAT);
 
-                blk_timestamp = xmreg::timestamp_to_str_gm(blk.timestamp);
+                blk_timestamp = inceg::timestamp_to_str_gm(blk.timestamp);
 
                 tx_blk_height_str = std::to_string(tx_blk_height);
             }
@@ -1619,7 +1619,7 @@ namespace xmreg
             string shortcut_url = domain
                                   + (tx_prove ? "/prove" : "/myoutputs")
                                   + "/" + tx_hash_str
-                                  + "/" + xmr_address_str
+                                  + "/" + inc_address_str
                                   + "/" + viewkey_str;
 
 
@@ -1634,13 +1634,13 @@ namespace xmreg
                     {"testnet"              , testnet},
                     {"tx_hash"              , tx_hash_str},
                     {"tx_prefix_hash"       , pod_to_hex(txd.prefix_hash)},
-                    {"xmr_address"          , xmr_address_str},
+                    {"inc_address"          , inc_address_str},
                     {"viewkey"              , viewkey_str_partial},
                     {"tx_pub_key"           , pod_to_hex(txd.pk)},
                     {"blk_height"           , tx_blk_height_str},
                     {"tx_size"              , fmt::format("{:0.4f}",
                                                           static_cast<double>(txd.size) / 1024.0)},
-                    {"tx_fee"               , xmreg::xmr_amount_to_str(txd.fee, "{:0.12f}", true)},
+                    {"tx_fee"               , inceg::inc_amount_to_str(txd.fee, "{:0.12f}", true)},
                     {"blk_timestamp"        , blk_timestamp},
                     {"delta_time"           , age.first},
                     {"outputs_no"           , static_cast<uint64_t>(txd.output_pub_keys.size())},
@@ -1653,7 +1653,7 @@ namespace xmreg
                     {"shortcut_url"         , shortcut_url}
             };
 
-            string server_time_str = xmreg::timestamp_to_str_gm(server_timestamp, "%F");
+            string server_time_str = inceg::timestamp_to_str_gm(server_timestamp, "%F");
 
 
 
@@ -1712,7 +1712,7 @@ namespace xmreg
 
             mstch::array outputs;
 
-            uint64_t sum_xmr {0};
+            uint64_t sum_inc {0};
 
             std::vector<uint64_t> money_transfered(tx.vout.size(), 0);
 
@@ -1725,7 +1725,7 @@ namespace xmreg
 
                 // get the tx output public key
                 // that normally would be generated for us,
-                // if someone had sent us some xmr.
+                // if someone had sent us some inc.
                 public_key tx_pubkey;
 
                 derive_public_key(derivation,
@@ -1785,12 +1785,12 @@ namespace xmreg
 
                 if (mine_output)
                 {
-                    sum_xmr += outp.second;
+                    sum_inc += outp.second;
                 }
 
                 outputs.push_back(mstch::map {
                         {"out_pub_key"   , pod_to_hex(outp.first.key)},
-                        {"amount"        , xmreg::xmr_amount_to_str(outp.second)},
+                        {"amount"        , inceg::inc_amount_to_str(outp.second)},
                         {"mine_output"   , mine_output},
                         {"output_idx"    , fmt::format("{:02d}", output_idx)}
                 });
@@ -1808,11 +1808,11 @@ namespace xmreg
 
             mstch::array inputs;
 
-            vector<txin_to_key> input_key_imgs = xmreg::get_key_images(tx);
+            vector<txin_to_key> input_key_imgs = inceg::get_key_images(tx);
 
-            // to hold sum of xmr in matched mixins, those that
+            // to hold sum of inc in matched mixins, those that
             // perfectly match mixin public key with outputs in mixn_tx.
-            uint64_t sum_mixin_xmr {0};
+            uint64_t sum_mixin_inc {0};
 
             // this is used for the final check. we assument that number of
             // parefct matches must be equal to number of inputs in a tx.
@@ -1844,7 +1844,7 @@ namespace xmreg
 
                 inputs.push_back(mstch::map{
                         {"key_image"       , pod_to_hex(in_key.k_image)},
-                        {"key_image_amount", xmreg::xmr_amount_to_str(in_key.amount)},
+                        {"key_image_amount", inceg::inc_amount_to_str(in_key.amount)},
                         make_pair(string("mixins"), mstch::array{})
                 });
 
@@ -1937,7 +1937,7 @@ namespace xmreg
 
 
                     public_key mixin_tx_pub_key
-                            = xmreg::get_tx_pub_key_from_received_outs(mixin_tx);
+                            = inceg::get_tx_pub_key_from_received_outs(mixin_tx);
                     std::vector<public_key> mixin_additional_tx_pub_keys = cryptonote::get_additional_tx_pub_keys_from_extra(mixin_tx);
 
                     string mixin_tx_pub_key_str = pod_to_hex(mixin_tx_pub_key);
@@ -1970,7 +1970,7 @@ namespace xmreg
                     //          <public_key  , amount  , out idx>
                     vector<tuple<txout_to_key, uint64_t, uint64_t>> output_pub_keys;
 
-                    output_pub_keys = xmreg::get_ouputs_tuple(mixin_tx);
+                    output_pub_keys = inceg::get_ouputs_tuple(mixin_tx);
 
                     mixin_outputs.push_back(mstch::map{
                             {"mix_tx_hash"      , mixin_tx_hash_str},
@@ -2006,7 +2006,7 @@ namespace xmreg
 
                         // get the tx output public key
                         // that normally would be generated for us,
-                        // if someone had sent us some xmr.
+                        // if someone had sent us some inc.
                         public_key tx_pubkey_generated;
 
                         derive_public_key(derivation,
@@ -2071,7 +2071,7 @@ namespace xmreg
                                 {"out_idx"         , output_idx_in_tx},
                                 {"formed_output_pk", out_pub_key_str},
                                 {"out_in_match"    , output_match},
-                                {"amount"          , xmreg::xmr_amount_to_str(amount)}
+                                {"amount"          , inceg::inc_amount_to_str(amount)}
                         });
 
                         //cout << "txout_k.key == output_data.pubkey" << endl;
@@ -2083,7 +2083,7 @@ namespace xmreg
                             found_something = true;
                             show_key_images = true;
 
-                            // increase sum_mixin_xmr only when
+                            // increase sum_mixin_inc only when
                             // public key of an outputs used in ring signature,
                             // matches a public key in a mixin_tx
                             if (txout_k.key != output_data.pubkey)
@@ -2102,11 +2102,11 @@ namespace xmreg
                                 // in amounts, not only in output public keys
                                 if (mixin_tx.version < 2 && amount == in_key.amount)
                                 {
-                                    sum_mixin_xmr += amount;
+                                    sum_mixin_inc += amount;
                                 }
                                 else if (mixin_tx.version == 2) // ringct
                                 {
-                                    sum_mixin_xmr += amount;
+                                    sum_mixin_inc += amount;
                                 }
 
                                 no_of_matched_mixins++;
@@ -2117,7 +2117,7 @@ namespace xmreg
                             // just to see how would having spend keys worked
 //                        crypto::key_image key_img;
 //
-//                        if (!xmreg::generate_key_image(derivation,
+//                        if (!inceg::generate_key_image(derivation,
 //                                                       output_idx_in_tx, /* position in the tx */
 //                                                       prv_spend_key,
 //                                                       address.m_spend_public_key,
@@ -2155,15 +2155,15 @@ namespace xmreg
 
             context.emplace("outputs", outputs);
 
-            context["found_our_outputs"] = (sum_xmr > 0);
-            context["sum_xmr"]           = xmreg::xmr_amount_to_str(sum_xmr);
+            context["found_our_outputs"] = (sum_inc > 0);
+            context["sum_inc"]           = inceg::inc_amount_to_str(sum_inc);
 
             context.emplace("inputs", inputs);
 
             context["show_inputs"]   = show_key_images;
             context["inputs_no"]     = static_cast<uint64_t>(inputs.size());
-            context["sum_mixin_xmr"] = xmreg::xmr_amount_to_str(
-                    sum_mixin_xmr, "{:0.12f}", false);
+            context["sum_mixin_inc"] = inceg::inc_amount_to_str(
+                    sum_mixin_inc, "{:0.12f}", false);
 
 
             uint64_t possible_spending  {0};
@@ -2171,14 +2171,14 @@ namespace xmreg
             // show spending only if sum of mixins is more than
             // what we get + fee, and number of perferctly matched
             // mixis is equal to number of inputs
-            if (sum_mixin_xmr > (sum_xmr + txd.fee)
+            if (sum_mixin_inc > (sum_inc + txd.fee)
                 && no_of_matched_mixins == inputs.size())
             {
                 //                  (outcoming    - incoming) - fee
-                possible_spending = (sum_mixin_xmr - sum_xmr) - txd.fee;
+                possible_spending = (sum_mixin_inc - sum_inc) - txd.fee;
             }
 
-            context["possible_spending"] = xmreg::xmr_amount_to_str(
+            context["possible_spending"] = inceg::inc_amount_to_str(
                     possible_spending, "{:0.12f}", false);
 
             add_css_style(context);
@@ -2189,13 +2189,13 @@ namespace xmreg
 
         string
         show_prove(string tx_hash_str,
-                   string xmr_address_str,
+                   string inc_address_str,
                    string tx_prv_key_str,
                    string const& raw_tx_data,
                    string domain)
         {
 
-            return show_my_outputs(tx_hash_str, xmr_address_str,
+            return show_my_outputs(tx_hash_str, inc_address_str,
                                    tx_prv_key_str, raw_tx_data,
                                    domain, true);
         }
@@ -2226,7 +2226,7 @@ namespace xmreg
 
             const size_t magiclen = strlen(UNSIGNED_TX_PREFIX);
 
-            string data_prefix = xmreg::make_printable(decoded_raw_tx_data.substr(0, magiclen));
+            string data_prefix = inceg::make_printable(decoded_raw_tx_data.substr(0, magiclen));
 
             bool unsigned_tx_given {false};
 
@@ -2296,7 +2296,7 @@ namespace xmreg
                         mstch::map tx_cd_data {
                                 {"no_of_sources"      , static_cast<uint64_t>(no_of_sources)},
                                 {"use_rct"            , tx_cd.use_rct},
-                                {"change_amount"      , xmreg::xmr_amount_to_str(tx_change.amount)},
+                                {"change_amount"      , inceg::inc_amount_to_str(tx_change.amount)},
                                 {"has_payment_id"     , (payment_id  != null_hash)},
                                 {"has_payment_id8"    , (payment_id8 != null_hash8)},
                                 {"payment_id"         , pid_str},
@@ -2313,7 +2313,7 @@ namespace xmreg
                             mstch::map dest_info {
                                     {"dest_address"  , get_account_address_as_str(
                                             testnet, a_dest.is_subaddress, a_dest.addr)},
-                                    {"dest_amount"   , xmreg::xmr_amount_to_str(a_dest.amount)}
+                                    {"dest_amount"   , inceg::inc_amount_to_str(a_dest.amount)}
                             };
 
                             dest_infos.push_back(dest_info);
@@ -2330,7 +2330,7 @@ namespace xmreg
                             const tx_source_entry&  tx_source = tx_cd.sources.at(i);
 
                             mstch::map single_dest_source {
-                                    {"output_amount"              , xmreg::xmr_amount_to_str(tx_source.amount)},
+                                    {"output_amount"              , inceg::inc_amount_to_str(tx_source.amount)},
                                     {"real_output"                , static_cast<uint64_t>(tx_source.real_output)},
                                     {"real_out_tx_key"            , pod_to_hex(tx_source.real_out_tx_key)},
                                     {"real_output_in_tx_index"    , static_cast<uint64_t>(tx_source.real_output_in_tx_index)},
@@ -2472,7 +2472,7 @@ namespace xmreg
                         } //  for (size_t i = 0; i < no_of_sources; ++i)
 
                         tx_cd_data.insert({"sum_outputs_amounts" ,
-                                           xmreg::xmr_amount_to_str(sum_outputs_amounts)});
+                                           inceg::inc_amount_to_str(sum_outputs_amounts)});
 
 
                         uint64_t min_mix_timestamp;
@@ -2486,8 +2486,8 @@ namespace xmreg
                                 );
 
                         tx_cd_data.emplace("timescales", mixins_timescales.first);
-                        tx_cd_data["min_mix_time"]     = xmreg::timestamp_to_str_gm(min_mix_timestamp);
-                        tx_cd_data["max_mix_time"]     = xmreg::timestamp_to_str_gm(max_mix_timestamp);
+                        tx_cd_data["min_mix_time"]     = inceg::timestamp_to_str_gm(min_mix_timestamp);
+                        tx_cd_data["max_mix_time"]     = inceg::timestamp_to_str_gm(max_mix_timestamp);
                         tx_cd_data["timescales_scale"] = fmt::format("{:0.2f}",
                                                                      mixins_timescales.second
                                                                      / 3600.0 / 24.0); // in days
@@ -2512,14 +2512,14 @@ namespace xmreg
 
                 const size_t magiclen = strlen(SIGNED_TX_PREFIX);
 
-                string data_prefix = xmreg::make_printable(decoded_raw_tx_data.substr(0, magiclen));
+                string data_prefix = inceg::make_printable(decoded_raw_tx_data.substr(0, magiclen));
 
                 if (strncmp(decoded_raw_tx_data.c_str(), SIGNED_TX_PREFIX, magiclen) != 0)
                 {
 
                     // ok, so its not signed tx data. but maybe it is raw tx data
                     // used in rpc call "/sendrawtransaction". This is for example
-                    // used in mymonero and openmonero projects.
+                    // used in myincognito and openincognito projects.
 
                     // to check this, first we need to encode data back to base64.
                     // the reason is that txs submited to "/sendrawtransaction"
@@ -2641,7 +2641,7 @@ namespace xmreg
 
                     mstch::array destination_addresses;
                     vector<uint64_t> real_ammounts;
-                    uint64_t outputs_xmr_sum {0};
+                    uint64_t outputs_inc_sum {0};
 
                     // destiantion address for this tx
                     for (tx_destination_entry& a_dest: ptx.construction_data.splitted_dsts)
@@ -2654,12 +2654,12 @@ namespace xmreg
                                 mstch::map {
                                         {"dest_address"   , get_account_address_as_str(
                                                 testnet, a_dest.is_subaddress, a_dest.addr)},
-                                        {"dest_amount"    , xmreg::xmr_amount_to_str(a_dest.amount)},
+                                        {"dest_amount"    , inceg::inc_amount_to_str(a_dest.amount)},
                                         {"is_this_change" , false}
                                 }
                         );
 
-                        outputs_xmr_sum += a_dest.amount;
+                        outputs_inc_sum += a_dest.amount;
 
                         real_ammounts.push_back(a_dest.amount);
                     }
@@ -2672,7 +2672,7 @@ namespace xmreg
                                         {"dest_address"   , get_account_address_as_str(
                                                 testnet, ptx.construction_data.change_dts.is_subaddress, ptx.construction_data.change_dts.addr)},
                                         {"dest_amount"    ,
-                                                xmreg::xmr_amount_to_str(ptx.construction_data.change_dts.amount)},
+                                                inceg::inc_amount_to_str(ptx.construction_data.change_dts.amount)},
                                         {"is_this_change" , true}
                                 }
                         );
@@ -2680,7 +2680,7 @@ namespace xmreg
                         real_ammounts.push_back(ptx.construction_data.change_dts.amount);
                     };
 
-                    tx_context["outputs_xmr_sum"] = xmreg::xmr_amount_to_str(outputs_xmr_sum);
+                    tx_context["outputs_inc_sum"] = inceg::inc_amount_to_str(outputs_inc_sum);
 
                     tx_context.insert({"dest_infos", destination_addresses});
 
@@ -2704,7 +2704,7 @@ namespace xmreg
                         {
                             if (output_amount == 0)
                             {
-                                out_amount_str = xmreg::xmr_amount_to_str(real_ammounts.at(i));
+                                out_amount_str = inceg::inc_amount_to_str(real_ammounts.at(i));
                             }
                         }
                     }
@@ -2714,7 +2714,7 @@ namespace xmreg
                     vector<uint64_t> real_output_indices;
                     vector<uint64_t> real_amounts;
 
-                    uint64_t inputs_xmr_sum {0};
+                    uint64_t inputs_inc_sum {0};
 
                     for (const tx_source_entry&  tx_source: ptx.construction_data.sources)
                     {
@@ -2763,14 +2763,14 @@ namespace xmreg
                         real_output_indices.push_back(tx_source.real_output);
                         real_amounts.push_back(tx_source.amount);
 
-                        inputs_xmr_sum += tx_source.amount;
+                        inputs_inc_sum += tx_source.amount;
                     }
 
                     // mark that we have signed tx data for use in mstch
                     tx_context["have_raw_tx"] = true;
 
-                    // provide total mount of inputs xmr
-                    tx_context["inputs_xmr_sum"] = xmreg::xmr_amount_to_str(inputs_xmr_sum);
+                    // provide total mount of inputs inc
+                    tx_context["inputs_inc_sum"] = inceg::inc_amount_to_str(inputs_inc_sum);
 
                     // get reference to inputs array created of the tx
                     mstch::array& inputs = boost::get<mstch::array>(tx_context["inputs"]);
@@ -2788,7 +2788,7 @@ namespace xmreg
                                 boost::get<mstch::map>(input_node)["amount"]
                         );
 
-                        amount = xmreg::xmr_amount_to_str(real_amounts.at(input_idx));
+                        amount = inceg::inc_amount_to_str(real_amounts.at(input_idx));
 
                         // check if key images are spend or not
 
@@ -2874,14 +2874,14 @@ namespace xmreg
                 ptx_vector.push_back({});
                 ptx_vector.back().tx = parsed_tx;
             }
-            // if failed, treat raw_tx_data as base64 encoding of signed_monero_tx
+            // if failed, treat raw_tx_data as base64 encoding of signed_incognito_tx
             else
             {
                 string decoded_raw_tx_data = epee::string_encoding::base64_decode(raw_tx_data);
 
                 const size_t magiclen = strlen(SIGNED_TX_PREFIX);
 
-                string data_prefix = xmreg::make_printable(decoded_raw_tx_data.substr(0, magiclen));
+                string data_prefix = inceg::make_printable(decoded_raw_tx_data.substr(0, magiclen));
 
                 context["data_prefix"] = data_prefix;
 
@@ -3113,7 +3113,7 @@ namespace xmreg
                 return mstch::render(full_page, context);
             }
 
-            if (!xmreg::parse_str_secret_key(viewkey_str, prv_view_key))
+            if (!inceg::parse_str_secret_key(viewkey_str, prv_view_key))
             {
                 string error_msg = fmt::format("Cant parse the private key: " + viewkey_str);
 
@@ -3125,7 +3125,7 @@ namespace xmreg
 
             const size_t magiclen = strlen(KEY_IMAGE_EXPORT_FILE_MAGIC);
 
-            string data_prefix = xmreg::make_printable(decoded_raw_data.substr(0, magiclen));
+            string data_prefix = inceg::make_printable(decoded_raw_data.substr(0, magiclen));
 
             context["data_prefix"] = data_prefix;
 
@@ -3140,7 +3140,7 @@ namespace xmreg
             }
 
             // decrypt key images data using private view key
-            decoded_raw_data = xmreg::decrypt(
+            decoded_raw_data = inceg::decrypt(
                     std::string(decoded_raw_data, magiclen),
                     prv_view_key, true);
 
@@ -3172,20 +3172,20 @@ namespace xmreg
 
             }
 
-            // get xmr address stored in this key image file
-            const account_public_address* xmr_address =
+            // get inc address stored in this key image file
+            const account_public_address* inc_address =
                     reinterpret_cast<const account_public_address*>(
                             decoded_raw_data.data());
 
-            address_parse_info address_info {*xmr_address, false};
+            address_parse_info address_info {*inc_address, false};
 
 
             context.insert({"address"        , REMOVE_HASH_BRAKETS(
-                    xmreg::print_address(address_info, testnet))});
+                    inceg::print_address(address_info, testnet))});
             context.insert({"viewkey"        , REMOVE_HASH_BRAKETS(
                     fmt::format("{:s}", prv_view_key))});
-            context.insert({"has_total_xmr"  , false});
-            context.insert({"total_xmr"      , string{}});
+            context.insert({"has_total_inc"  , false});
+            context.insert({"total_inc"      , string{}});
             context.insert({"key_imgs"       , mstch::array{}});
 
 
@@ -3209,7 +3209,7 @@ namespace xmreg
                         {"key_no"              , fmt::format("{:03d}", n)},
                         {"key_image"           , pod_to_hex(key_image)},
                         {"signature"           , fmt::format("{:s}", signature)},
-                        {"address"             , xmreg::print_address(
+                        {"address"             , inceg::print_address(
                                                     address_info, testnet)},
                         {"is_spent"            , core_storage->have_tx_keyimg_as_spent(key_image)},
                         {"tx_hash"             , string{}}
@@ -3258,7 +3258,7 @@ namespace xmreg
                 return mstch::render(full_page, context);
             }
 
-            if (!xmreg::parse_str_secret_key(viewkey_str, prv_view_key))
+            if (!inceg::parse_str_secret_key(viewkey_str, prv_view_key))
             {
                 string error_msg = fmt::format("Cant parse the private key: " + viewkey_str);
 
@@ -3270,7 +3270,7 @@ namespace xmreg
 
             const size_t magiclen = strlen(OUTPUT_EXPORT_FILE_MAGIC);
 
-            string data_prefix = xmreg::make_printable(decoded_raw_data.substr(0, magiclen));
+            string data_prefix = inceg::make_printable(decoded_raw_data.substr(0, magiclen));
 
             context["data_prefix"] = data_prefix;
 
@@ -3286,7 +3286,7 @@ namespace xmreg
 
 
             // decrypt key images data using private view key
-            decoded_raw_data = xmreg::decrypt(
+            decoded_raw_data = inceg::decrypt(
                     std::string(decoded_raw_data, magiclen),
                     prv_view_key, true);
 
@@ -3306,19 +3306,19 @@ namespace xmreg
             // header is public spend and keys
             const size_t header_lenght    = 2 * sizeof(crypto::public_key);
 
-            // get xmr address stored in this key image file
-            const account_public_address* xmr_address =
+            // get inc address stored in this key image file
+            const account_public_address* inc_address =
                     reinterpret_cast<const account_public_address*>(
                             decoded_raw_data.data());
 
-            address_parse_info address_info {*xmr_address, false};
+            address_parse_info address_info {*inc_address, false};
 
             context.insert({"address"        , REMOVE_HASH_BRAKETS(
-                    xmreg::print_address(address_info, testnet))});
+                    inceg::print_address(address_info, testnet))});
             context.insert({"viewkey"        , REMOVE_HASH_BRAKETS(
                     fmt::format("{:s}", prv_view_key))});
-            context.insert({"has_total_xmr"  , false});
-            context.insert({"total_xmr"      , string{}});
+            context.insert({"has_total_inc"  , false});
+            context.insert({"total_inc"      , string{}});
             context.insert({"output_keys"    , mstch::array{}});
 
             mstch::array& output_keys_ctx = boost::get<mstch::array>(context["output_keys"]);
@@ -3347,7 +3347,7 @@ namespace xmreg
                 return mstch::render(full_page, context);
             }
 
-            uint64_t total_xmr {0};
+            uint64_t total_inc {0};
             uint64_t output_no {0};
 
             context["are_key_images_known"] = false;
@@ -3360,7 +3360,7 @@ namespace xmreg
                 txout_to_key txout_key = boost::get<txout_to_key>(
                         txp.vout[td.m_internal_output_index].target);
 
-                uint64_t xmr_amount = td.amount();
+                uint64_t inc_amount = td.amount();
 
                 // if the output is RingCT, i.e., tx version is 2
                 // need to decode its amount
@@ -3379,7 +3379,7 @@ namespace xmreg
                         return mstch::render(full_page, context);
                     }
 
-                    public_key tx_pub_key = xmreg::get_tx_pub_key_from_received_outs(tx);
+                    public_key tx_pub_key = inceg::get_tx_pub_key_from_received_outs(tx);
                     std::vector<public_key> additional_tx_pub_keys = cryptonote::get_additional_tx_pub_keys_from_extra(tx);
 
                     // cointbase txs have amounts in plain sight.
@@ -3392,13 +3392,13 @@ namespace xmreg
                                                prv_view_key,
                                                td.m_internal_output_index,
                                                tx.rct_signatures.ecdhInfo[td.m_internal_output_index].mask,
-                                               xmr_amount);
+                                               inc_amount);
                         r = r || decode_ringct(tx.rct_signatures,
                                                additional_tx_pub_keys[td.m_internal_output_index],
                                                prv_view_key,
                                                td.m_internal_output_index,
                                                tx.rct_signatures.ecdhInfo[td.m_internal_output_index].mask,
-                                               xmr_amount);
+                                               inc_amount);
 
                         if (!r)
                         {
@@ -3437,9 +3437,9 @@ namespace xmreg
                 mstch::map output_info {
                         {"output_no"           , fmt::format("{:03d}", output_no)},
                         {"output_pub_key"      , REMOVE_HASH_BRAKETS(fmt::format("{:s}", txout_key.key))},
-                        {"amount"              , xmreg::xmr_amount_to_str(xmr_amount)},
+                        {"amount"              , inceg::inc_amount_to_str(inc_amount)},
                         {"tx_hash"             , REMOVE_HASH_BRAKETS(fmt::format("{:s}", td.m_txid))},
-                        {"timestamp"           , xmreg::timestamp_to_str_gm(blk_timestamp)},
+                        {"timestamp"           , inceg::timestamp_to_str_gm(blk_timestamp)},
                         {"is_spent"            , is_output_spent},
                         {"is_ringct"           , td.m_rct}
                 };
@@ -3448,16 +3448,16 @@ namespace xmreg
 
                 if (!is_output_spent)
                 {
-                    total_xmr += xmr_amount;
+                    total_inc += inc_amount;
                 }
 
                 output_keys_ctx.push_back(output_info);
             }
 
-            if (total_xmr > 0)
+            if (total_inc > 0)
             {
-                context["has_total_xmr"] = true;
-                context["total_xmr"] = xmreg::xmr_amount_to_str(total_xmr);
+                context["has_total_inc"] = true;
+                context["total_inc"] = inceg::inc_amount_to_str(total_inc);
             }
 
             return mstch::render(full_page, context);;
@@ -3524,19 +3524,16 @@ namespace xmreg
             result_html = default_txt;
 
 
-            // check if monero address is given based on its length
+            // check if incognito address is given based on its length
             // if yes, then we can only show its public components
-            if (search_str_length == 95)
+            if (search_str_length == 98)
             {
-                // parse string representing given monero address
+                // parse string representing given incognito address
                 address_parse_info address_info;
 
                 bool testnet_addr {false};
 
-                if (search_text[0] == '9' || search_text[0] == 'A' || search_text[0] == 'B')
-                    testnet_addr = true;
-
-                if (!xmreg::parse_str_address(search_text, address_info, testnet_addr))
+                if (!inceg::parse_str_address(search_text, address_info, testnet_addr))
                 {
                     cerr << "Cant parse string address: " << search_text << endl;
                     return string("Cant parse address (probably incorrect format): ")
@@ -3546,7 +3543,7 @@ namespace xmreg
                 return show_address_details(address_info, testnet_addr);
             }
 
-            // check if integrated monero address is given based on its length
+            // check if integrated incognito address is given based on its length
             // if yes, then show its public components search tx based on encrypted id
             if (search_str_length == 106)
             {
@@ -3581,12 +3578,12 @@ namespace xmreg
         show_address_details(const address_parse_info& address_info, bool testnet = false)
         {
 
-            string address_str      = xmreg::print_address(address_info, testnet);
+            string address_str      = inceg::print_address(address_info, testnet);
             string pub_viewkey_str  = fmt::format("{:s}", address_info.address.m_view_public_key);
             string pub_spendkey_str = fmt::format("{:s}", address_info.address.m_spend_public_key);
 
             mstch::map context {
-                    {"xmr_address"        , REMOVE_HASH_BRAKETS(address_str)},
+                    {"inc_address"        , REMOVE_HASH_BRAKETS(address_str)},
                     {"public_viewkey"     , REMOVE_HASH_BRAKETS(pub_viewkey_str)},
                     {"public_spendkey"    , REMOVE_HASH_BRAKETS(pub_spendkey_str)},
                     {"is_integrated_addr" , false},
@@ -3606,13 +3603,13 @@ namespace xmreg
                                         bool testnet = false)
         {
 
-            string address_str        = xmreg::print_address(address_info, testnet);
+            string address_str        = inceg::print_address(address_info, testnet);
             string pub_viewkey_str    = fmt::format("{:s}", address_info.address.m_view_public_key);
             string pub_spendkey_str   = fmt::format("{:s}", address_info.address.m_spend_public_key);
             string enc_payment_id_str = fmt::format("{:s}", encrypted_payment_id);
 
             mstch::map context {
-                    {"xmr_address"          , REMOVE_HASH_BRAKETS(address_str)},
+                    {"inc_address"          , REMOVE_HASH_BRAKETS(address_str)},
                     {"public_viewkey"       , REMOVE_HASH_BRAKETS(pub_viewkey_str)},
                     {"public_spendkey"      , REMOVE_HASH_BRAKETS(pub_spendkey_str)},
                     {"encrypted_payment_id" , REMOVE_HASH_BRAKETS(enc_payment_id_str)},
@@ -3787,7 +3784,7 @@ namespace xmreg
 
 
                         // add the timestamp to tx mstch map
-                        txd_map.insert({"timestamp", xmreg::timestamp_to_str_gm(blk_timestamp)});
+                        txd_map.insert({"timestamp", inceg::timestamp_to_str_gm(blk_timestamp)});
 
                         boost::get<mstch::array>((res.first)->second).push_back(txd_map);
 
@@ -3839,7 +3836,7 @@ namespace xmreg
             // parse tx hash string to hash object
             crypto::hash tx_hash;
 
-            if (!xmreg::parse_str_secret_key(tx_hash_str, tx_hash))
+            if (!inceg::parse_str_secret_key(tx_hash_str, tx_hash))
             {
                 j_data["title"] = fmt::format("Cant parse tx hash: {:s}", tx_hash_str);
                 return j_response;
@@ -3892,7 +3889,7 @@ namespace xmreg
                 }
             }
 
-            string blk_timestamp_utc = xmreg::timestamp_to_str_gm(tx_timestamp);
+            string blk_timestamp_utc = inceg::timestamp_to_str_gm(tx_timestamp);
 
             // get the current blockchain height. Just to check
             uint64_t bc_height = core_storage->get_current_blockchain_height();
@@ -3999,7 +3996,7 @@ namespace xmreg
             // parse tx hash string to hash object
             crypto::hash tx_hash;
 
-            if (!xmreg::parse_str_secret_key(tx_hash_str, tx_hash))
+            if (!inceg::parse_str_secret_key(tx_hash_str, tx_hash))
             {
                 j_data["title"] = fmt::format("Cant parse tx hash: {:s}", tx_hash_str);
                 return j_response;
@@ -4047,7 +4044,7 @@ namespace xmreg
                 }
             }
 
-            // get raw tx json as in monero
+            // get raw tx json as in incognito
 
             try
             {
@@ -4122,7 +4119,7 @@ namespace xmreg
             else if (block_no_or_hash.length() == 64)
             {
                 // this seems to be block hash
-                if (!xmreg::parse_str_secret_key(block_no_or_hash, blk_hash))
+                if (!inceg::parse_str_secret_key(block_no_or_hash, blk_hash))
                 {
                     j_data["title"] = fmt::format("Cant parse blk hash: {:s}", block_no_or_hash);
                     return j_response;
@@ -4194,7 +4191,7 @@ namespace xmreg
                     {"block_height"  , block_height},
                     {"hash"          , pod_to_hex(blk_hash)},
                     {"timestamp"     , blk.timestamp},
-                    {"timestamp_utc" , xmreg::timestamp_to_str_gm(blk.timestamp)},
+                    {"timestamp_utc" , inceg::timestamp_to_str_gm(blk.timestamp)},
                     {"block_height"  , block_height},
                     {"size"          , blk_size},
                     {"txs"           , j_txs},
@@ -4265,7 +4262,7 @@ namespace xmreg
             else if (block_no_or_hash.length() == 64)
             {
                 // this seems to be block hash
-                if (!xmreg::parse_str_secret_key(block_no_or_hash, blk_hash))
+                if (!inceg::parse_str_secret_key(block_no_or_hash, blk_hash))
                 {
                     j_data["title"] = fmt::format("Cant parse blk hash: {:s}", block_no_or_hash);
                     return j_response;
@@ -4285,7 +4282,7 @@ namespace xmreg
                 return j_response;
             }
 
-            // get raw tx json as in monero
+            // get raw tx json as in incognito
 
             try
             {
@@ -4386,7 +4383,7 @@ namespace xmreg
                         {"age"          , age.first},
                         {"size"         , blk_size},
                         {"timestamp"    , blk.timestamp},
-                        {"timestamp_utc", xmreg::timestamp_to_str_gm(blk.timestamp)},
+                        {"timestamp_utc", inceg::timestamp_to_str_gm(blk.timestamp)},
                         {"txs"          , json::array()}
                 });
 
@@ -4653,20 +4650,20 @@ namespace xmreg
             // parse tx hash string to hash object
             crypto::hash tx_hash;
 
-            if (!xmreg::parse_str_secret_key(tx_hash_str, tx_hash))
+            if (!inceg::parse_str_secret_key(tx_hash_str, tx_hash))
             {
                 j_response["status"]  = "error";
                 j_response["message"] = "Cant parse tx hash: " + tx_hash_str;
                 return j_response;
             }
 
-            // parse string representing given monero address
+            // parse string representing given incognito address
             address_parse_info address_info;
 
-            if (!xmreg::parse_str_address(address_str,  address_info, testnet))
+            if (!inceg::parse_str_address(address_str,  address_info, testnet))
             {
                 j_response["status"]  = "error";
-                j_response["message"] = "Cant parse monero address: " + address_str;
+                j_response["message"] = "Cant parse incognito address: " + address_str;
                 return j_response;
 
             }
@@ -4674,7 +4671,7 @@ namespace xmreg
             // parse string representing given private key
             crypto::secret_key prv_view_key;
 
-            if (!xmreg::parse_str_secret_key(viewkey_str, prv_view_key))
+            if (!inceg::parse_str_secret_key(viewkey_str, prv_view_key))
             {
                 j_response["status"]  = "error";
                 j_response["message"] = "Cant parse view key or tx private key: "
@@ -4740,7 +4737,7 @@ namespace xmreg
 
                 // get the tx output public key
                 // that normally would be generated for us,
-                // if someone had sent us some xmr.
+                // if someone had sent us some inc.
                 public_key tx_pubkey;
 
                 derive_public_key(derivation,
@@ -4865,13 +4862,13 @@ namespace xmreg
                 return j_response;
             }
 
-            // parse string representing given monero address
+            // parse string representing given incognito address
             address_parse_info address_info;
 
-            if (!xmreg::parse_str_address(address_str, address_info, testnet))
+            if (!inceg::parse_str_address(address_str, address_info, testnet))
             {
                 j_response["status"]  = "error";
-                j_response["message"] = "Cant parse monero address: " + address_str;
+                j_response["message"] = "Cant parse incognito address: " + address_str;
                 return j_response;
 
             }
@@ -4879,7 +4876,7 @@ namespace xmreg
             // parse string representing given private key
             crypto::secret_key prv_view_key;
 
-            if (!xmreg::parse_str_secret_key(viewkey_str, prv_view_key))
+            if (!inceg::parse_str_secret_key(viewkey_str, prv_view_key))
             {
                 j_response["status"]  = "error";
                 j_response["message"] = "Cant parse view key: "
@@ -5017,10 +5014,10 @@ namespace xmreg
             json j_info;
 
             // get basic network info
-            if (!get_monero_network_info(j_info))
+            if (!get_incognito_network_info(j_info))
             {
                 j_response["status"]  = "error";
-                j_response["message"] = "Cant get monero network info";
+                j_response["message"] = "Cant get incognito network info";
                 return j_response;
             }
 
@@ -5075,8 +5072,8 @@ namespace xmreg
                         = CurrentBlockchainStatus::get_emission();
 
                 string emission_blk_no   = std::to_string(current_values.blk_no - 1);
-                string emission_coinbase = xmr_amount_to_str(current_values.coinbase, "{:0.3f}");
-                string emission_fee      = xmr_amount_to_str(current_values.fee, "{:0.3f}", false);
+                string emission_coinbase = inc_amount_to_str(current_values.coinbase, "{:0.3f}");
+                string emission_fee      = inc_amount_to_str(current_values.fee, "{:0.3f}", false);
 
                 j_data = json {
                         {"blk_no"  , current_values.blk_no - 1},
@@ -5109,7 +5106,7 @@ namespace xmreg
                     {"last_git_commit_hash", string {GIT_COMMIT_HASH}},
                     {"last_git_commit_date", string {GIT_COMMIT_DATETIME}},
                     {"git_branch_name"     , string {GIT_BRANCH_NAME}},
-                    {"monero_version_full" , string {MONERO_VERSION_FULL}},
+                    {"incognito_version_full" , string {INCOGNITO_VERSION_FULL}},
                     {"api"                 , ONIONEXPLORER_RPC_VERSION},
                     {"blockchain_height"   , core_storage->get_current_blockchain_height()}
             };
@@ -5201,7 +5198,7 @@ namespace xmreg
 
                     // get the tx output public key
                     // that normally would be generated for us,
-                    // if someone had sent us some xmr.
+                    // if someone had sent us some inc.
                     public_key tx_pubkey;
 
                     derive_public_key(derivation,
@@ -5290,8 +5287,8 @@ namespace xmreg
                     {"tx_fee"      , txd.fee},
                     {"mixin"       , txd.mixin_no},
                     {"tx_size"     , txd.size},
-                    {"xmr_outputs" , txd.xmr_outputs},
-                    {"xmr_inputs"  , txd.xmr_inputs},
+                    {"inc_outputs" , txd.inc_outputs},
+                    {"inc_inputs"  , txd.inc_inputs},
                     {"tx_version"  , static_cast<uint64_t>(txd.version)},
                     {"rct_type"    , tx.rct_signatures.type},
                     {"coinbase"    , is_coinbase(tx)},
@@ -5421,7 +5418,7 @@ namespace xmreg
                 // calculate difference between tx and server timestamps
                 age = get_age(server_timestamp, blk.timestamp, FULL_AGE_FORMAT);
 
-                blk_timestamp = xmreg::timestamp_to_str_gm(blk.timestamp);
+                blk_timestamp = inceg::timestamp_to_str_gm(blk.timestamp);
 
                 tx_blk_height_str = std::to_string(tx_blk_height);
             }
@@ -5446,7 +5443,7 @@ namespace xmreg
                     {"tx_blk_height"         , tx_blk_height},
                     {"tx_size"               , fmt::format("{:0.4f}",
                                                            static_cast<double>(txd.size) / 1024.0)},
-                    {"tx_fee"                , xmreg::xmr_amount_to_str(txd.fee, "{:0.12f}", false)},
+                    {"tx_fee"                , inceg::inc_amount_to_str(txd.fee, "{:0.12f}", false)},
                     {"tx_version"            , static_cast<uint64_t>(txd.version)},
                     {"blk_timestamp"         , blk_timestamp},
                     {"blk_timestamp_uint"    , blk.timestamp},
@@ -5474,13 +5471,13 @@ namespace xmreg
                     {"construction_time"     , string {}},
             };
 
-            string server_time_str = xmreg::timestamp_to_str_gm(server_timestamp, "%F");
+            string server_time_str = inceg::timestamp_to_str_gm(server_timestamp, "%F");
 
             mstch::array inputs = mstch::array{};
 
             uint64_t input_idx {0};
 
-            uint64_t inputs_xmr_sum {0};
+            uint64_t inputs_inc_sum {0};
 
             // ringct inputs can be mixture of known amounts (when old outputs)
             // are spent, and unknown umounts (makrked in explorer by '?') when
@@ -5551,7 +5548,7 @@ namespace xmreg
 
                 inputs.push_back(mstch::map {
                         {"in_key_img"   , pod_to_hex(in_key.k_image)},
-                        {"amount"       , xmreg::xmr_amount_to_str(in_key.amount)},
+                        {"amount"       , inceg::inc_amount_to_str(in_key.amount)},
                         {"input_idx"    , fmt::format("{:02d}", input_idx)},
                         {"mixins"       , mstch::array{}},
                         {"ring_sigs"    , mstch::array{}},
@@ -5565,7 +5562,7 @@ namespace xmreg
                 }
 
 
-                inputs_xmr_sum += in_key.amount;
+                inputs_inc_sum += in_key.amount;
 
                 if (in_key.amount == 0)
                 {
@@ -5652,7 +5649,7 @@ namespace xmreg
                                 {"mix_pub_key",    pod_to_hex(output_data.pubkey)},
                                 {"mix_tx_hash",    pod_to_hex(tx_out_idx.first)},
                                 {"mix_out_indx",   tx_out_idx.second},
-                                {"mix_timestamp",  xmreg::timestamp_to_str_gm(blk.timestamp)},
+                                {"mix_timestamp",  inceg::timestamp_to_str_gm(blk.timestamp)},
                                 {"mix_age",        mixin_age.first},
                                 {"mix_mixin_no",   mixin_txd.mixin_no},
                                 {"mix_inputs_no",  static_cast<uint64_t>(mixin_txd.input_key_imgs.size())},
@@ -5701,8 +5698,8 @@ namespace xmreg
                         );
 
 
-                context["min_mix_time"]     = xmreg::timestamp_to_str_gm(min_mix_timestamp);
-                context["max_mix_time"]     = xmreg::timestamp_to_str_gm(max_mix_timestamp);
+                context["min_mix_time"]     = inceg::timestamp_to_str_gm(min_mix_timestamp);
+                context["max_mix_time"]     = inceg::timestamp_to_str_gm(max_mix_timestamp);
 
                 context.emplace("timescales", mixins_timescales.first);
 
@@ -5716,8 +5713,8 @@ namespace xmreg
 
 
             context["have_any_unknown_amount"]  = have_any_unknown_amount;
-            context["inputs_xmr_sum_not_zero"]  = (inputs_xmr_sum > 0);
-            context["inputs_xmr_sum"]           = xmreg::xmr_amount_to_str(inputs_xmr_sum);
+            context["inputs_inc_sum_not_zero"]  = (inputs_inc_sum > 0);
+            context["inputs_inc_sum"]           = inceg::inc_amount_to_str(inputs_inc_sum);
             context["server_time"]              = server_time_str;
             context["enable_mixins_details"]    = detailed_view;
             context["show_part_of_inputs"]      = show_part_of_inputs;
@@ -5754,7 +5751,7 @@ namespace xmreg
 
             mstch::array outputs;
 
-            uint64_t outputs_xmr_sum {0};
+            uint64_t outputs_inc_sum {0};
 
             for (pair<txout_to_key, uint64_t>& outp: txd.output_pub_keys)
             {
@@ -5773,18 +5770,18 @@ namespace xmreg
                                                        out_amount_indices.at(output_idx));
                 }
 
-                outputs_xmr_sum += outp.second;
+                outputs_inc_sum += outp.second;
 
                 outputs.push_back(mstch::map {
                         {"out_pub_key"   , pod_to_hex(outp.first.key)},
-                        {"amount"        , xmreg::xmr_amount_to_str(outp.second)},
+                        {"amount"        , inceg::inc_amount_to_str(outp.second)},
                         {"amount_idx"    , out_amount_index_str},
                         {"num_outputs"   , num_outputs_amount},
                         {"output_idx"    , fmt::format("{:02d}", output_idx++)}
                 });
             }
 
-            context["outputs_xmr_sum"] = xmreg::xmr_amount_to_str(outputs_xmr_sum);
+            context["outputs_inc_sum"] = inceg::inc_amount_to_str(outputs_inc_sum);
 
             context.emplace("outputs", outputs);
 
@@ -5829,7 +5826,7 @@ namespace xmreg
             for (auto& mixn_timestamps : mixin_timestamp_groups)
             {
                 // get mixins in time scale for visual representation
-                pair<string, double> mixin_times_scale = xmreg::timestamps_time_scale(
+                pair<string, double> mixin_times_scale = inceg::timestamps_time_scale(
                         mixn_timestamps,
                         max_mix_timestamp,
                         170,
@@ -5862,17 +5859,17 @@ namespace xmreg
             // get tx public key from extra
             // this check if there are two public keys
             // due to previous bug with sining txs:
-            // https://github.com/monero-project/monero/pull/1358/commits/7abfc5474c0f86e16c405f154570310468b635c2
-            txd.pk = xmreg::get_tx_pub_key_from_received_outs(tx);
+            // https://github.com/incognito-currency/incognito/pull/1358/commits/7abfc5474c0f86e16c405f154570310468b635c2
+            txd.pk = inceg::get_tx_pub_key_from_received_outs(tx);
             txd.additional_pks = cryptonote::get_additional_tx_pub_keys_from_extra(tx);
 
 
-            // sum xmr in inputs and ouputs in the given tx
+            // sum inc in inputs and ouputs in the given tx
             const array<uint64_t, 4>& sum_data = summary_of_in_out_rct(
                     tx, txd.output_pub_keys, txd.input_key_imgs);
 
-            txd.xmr_outputs       = sum_data[0];
-            txd.xmr_inputs        = sum_data[1];
+            txd.inc_outputs       = sum_data[0];
+            txd.inc_inputs        = sum_data[1];
             txd.mixin_no          = sum_data[2];
             txd.num_nonrct_inputs = sum_data[3];
 
@@ -6044,7 +6041,7 @@ namespace xmreg
         }
 
         bool
-        get_monero_network_info(json& j_info)
+        get_incognito_network_info(json& j_info)
         {
             MempoolStatus::network_info local_copy_network_info
                 = MempoolStatus::current_network_info;
@@ -6103,13 +6100,13 @@ namespace xmreg
                     {"last_git_commit_hash", string {GIT_COMMIT_HASH}},
                     {"last_git_commit_date", string {GIT_COMMIT_DATETIME}},
                     {"git_branch_name"     , string {GIT_BRANCH_NAME}},
-                    {"monero_version_full" , string {MONERO_VERSION_FULL}},
+                    {"incognito_version_full" , string {INCOGNITO_VERSION_FULL}},
                     {"api"                 , std::to_string(ONIONEXPLORER_RPC_VERSION_MAJOR)
                                              + "."
                                              + std::to_string(ONIONEXPLORER_RPC_VERSION_MINOR)},
             };
 
-            string footer_html = mstch::render(xmreg::read(TMPL_FOOTER), footer_context);
+            string footer_html = mstch::render(inceg::read(TMPL_FOOTER), footer_context);
 
             return footer_html;
         }
@@ -6126,5 +6123,5 @@ namespace xmreg
 }
 
 
-#endif //CROWXMR_PAGE_H
+#endif //CROWINC_PAGE_H
 
