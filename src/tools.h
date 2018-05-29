@@ -6,9 +6,9 @@
 #define INCEG01_TOOLS_H
 
 #define PATH_SEPARARTOR '/'
-
+// by hms
 #define INC_AMOUNT(value) \
-    static_cast<double>(value) / 1e7
+    static_cast<double>(value) / 1e10
 
 #define REMOVE_HASH_BRAKETS(a_hash) \
     a_hash.substr(1, a_hash.size()-2)
@@ -220,7 +220,7 @@ get_payment_id(const transaction& tx,
 inline double
 get_inc(uint64_t core_amount)
 {
-    return  static_cast<double>(core_amount) / 1e7;
+    return  static_cast<double>(core_amount) / 1e10;
 }
 
 array<size_t, 5>
@@ -270,7 +270,7 @@ get_tx_pub_key_from_received_outs(const transaction &tx);
 static
 string
 inc_amount_to_str(const uint64_t& inc_amount,
-                  string _format="{:0.7f}",
+                  string _format="{:0.10f}",
                   bool zero_to_question_mark=true)
 {
     string amount_str = "?";
